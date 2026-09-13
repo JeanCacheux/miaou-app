@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#111827" />
-  <title>Miaou — traducteur expérimental pour chat</title>
+  <title>Miaou — laboratoire de communication féline</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <h1>🐾 Miaou</h1>
+    <h1>🐾 Miaou <span class="version">v0.5</span></h1>
     <p>Un laboratoire personnel pour apprendre les vocalisations de ton chat.</p>
   </header>
 
@@ -23,37 +23,49 @@
 
     <section id="train" class="panel active">
       <h2>Mode entraînement</h2>
-      <p>L’application choisit un son, prépare le micro, joue le stimulus puis <strong>enregistre automatiquement la réponse de ton chat dès que le son se termine</strong>.</p>
+      <p>Une pression suffit : Miaou joue un miaulement puis <strong>écoute immédiatement</strong> la réponse de ton chat.</p>
+
+      <div class="card library-card">
+        <h3>📚 Bibliothèque complète CatMeows</h3>
+        <p>Installe une seule fois les <strong>440 miaulements</strong> du jeu de données CatMeows. Ensuite ils sont conservés localement sur cet appareil : plus d’attente réseau avant chaque essai.</p>
+        <button id="installCatMeows" class="primary">⬇ Installer les 440 miaulements</button>
+        <div id="libraryInstallStatus" class="status">Vérification de la bibliothèque locale…</div>
+        <details id="manualZipWrap">
+          <summary>Si l’installation automatique ne fonctionne pas</summary>
+          <p class="muted-note">Télécharge <code>dataset.zip</code> depuis CatMeows/Zenodo puis sélectionne-le ici. Miaou l’extrait sur l’iPad.</p>
+          <input id="catMeowsZip" type="file" accept=".zip,application/zip" />
+        </details>
+      </div>
 
       <div class="card">
-        <h3>🔊 Bibliothèque de sons</h3>
+        <h3>🔊 Choisir un son</h3>
         <label>Source
           <select id="librarySource">
-            <option value="auto">Automatique — bibliothèque publique + sons intégrés</option>
-            <option value="public">Bibliothèque publique</option>
+            <option value="catmeows">CatMeows — bibliothèque complète locale</option>
+            <option value="auto">Automatique — toutes les sources</option>
+            <option value="public">Bibliothèques publiques</option>
             <option value="builtin">Sons intégrés de secours</option>
           </select>
         </label>
+        <div id="libraryCount" class="muted-note"></div>
         <label>Stimulus
           <select id="stimulusSelect"></select>
         </label>
         <div class="row">
-          <button id="randomStimulus">🎲 Choisir automatiquement</button>
-          <button id="playStimulus" class="primary">▶ Jouer + écouter automatiquement</button>
+          <button id="randomStimulus">🎲 Un autre</button>
+          <button id="playStimulus" class="primary">▶ Jouer + écouter</button>
         </div>
         <div id="stimulusInfo" class="result">Chargement de la bibliothèque…</div>
         <details>
           <summary>Importer aussi un son personnel</summary>
-          <div class="row top-gap">
-            <input id="stimulusFile" type="file" accept="audio/*" />
-          </div>
+          <div class="row top-gap"><input id="stimulusFile" type="file" accept="audio/*" /></div>
         </details>
       </div>
 
       <div class="card">
         <h3>🎙️ Réponse du chat</h3>
-        <div id="trainingStatus" class="status" data-state="idle">Prêt. Appuie sur « Jouer + écouter automatiquement ».</div>
-        <p class="muted-note">Après le miaulement, Miaou écoute automatiquement pendant 6 secondes. Tu peux arrêter plus tôt si ton chat a déjà répondu.</p>
+        <div id="trainingStatus" class="status" data-state="idle">Prêt. Appuie sur « Jouer + écouter ».</div>
+        <p class="muted-note">L’enregistrement démarre dès la fin du miaulement, sans délai artificiel, et s’arrête automatiquement après 6 secondes.</p>
         <div class="row">
           <button id="recordTrain">🎙️ Enregistrer manuellement</button>
           <button id="stopTrain" disabled>⏹ Arrêter l’écoute</button>
@@ -82,42 +94,28 @@
 
     <section id="cat2text" class="panel">
       <h2>Chat → Texte</h2>
-      <p>Enregistre un miaulement spontané. Le MVP retrouve les intentions déjà rencontrées.</p>
-      <div class="card">
-        <div class="row">
-          <button id="recordTranslate">🎙️ Écouter</button>
-          <button id="stopTranslate" disabled>⏹ Stop</button>
-        </div>
-        <audio id="translatePlayback" controls></audio>
-        <div id="catTranslation" class="result">Aucune analyse pour l’instant.</div>
-      </div>
+      <p>Enregistre un miaulement spontané. Pour l’instant, le MVP s’appuie sur ton historique ; le modèle audio personnalisé viendra ensuite.</p>
+      <div class="card"><div class="row"><button id="recordTranslate">🎙️ Écouter</button><button id="stopTranslate" disabled>⏹ Stop</button></div><audio id="translatePlayback" controls></audio><div id="catTranslation" class="result">Aucune analyse pour l’instant.</div></div>
     </section>
 
     <section id="text2cat" class="panel">
       <h2>Texte → Chat</h2>
       <p>Écris une intention. L’application choisit le stimulus qui a le mieux fonctionné dans tes essais.</p>
-      <div class="card">
-        <label>Ce que tu veux lui dire <input id="humanText" placeholder="Ex. viens" /></label>
-        <button id="findSignal" class="primary">🔎 Trouver le meilleur signal</button>
-        <div id="signalResult" class="result">Aucun signal sélectionné.</div>
-        <button id="playBestSignal" disabled>▶ Jouer le meilleur signal</button>
-      </div>
+      <div class="card"><label>Ce que tu veux lui dire <input id="humanText" placeholder="Ex. viens" /></label><button id="findSignal" class="primary">🔎 Trouver le meilleur signal</button><div id="signalResult" class="result">Aucun signal sélectionné.</div><button id="playBestSignal" disabled>▶ Jouer le meilleur signal</button></div>
     </section>
 
     <section id="history" class="panel">
       <h2>Historique</h2>
-      <div class="row">
-        <button id="exportData">⬇ Exporter JSON</button>
-        <button id="clearData" class="danger">🗑 Effacer les données locales</button>
-      </div>
+      <div class="row"><button id="exportData">⬇ Exporter JSON</button><button id="clearData" class="danger">🗑 Effacer les données locales</button></div>
       <div id="historyList"></div>
     </section>
   </main>
 
   <footer>
-    <small>Prototype expérimental : ne prétend pas traduire une langue féline universelle. Les sons publics sont lus depuis leur source et ne sont pas copiés dans le dépôt.</small>
+    <small>Prototype expérimental. CatMeows est utilisé depuis sa source Zenodo et installé localement sur l’appareil ; ses conditions indiquent un usage de recherche scientifique et non commercial.</small>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
