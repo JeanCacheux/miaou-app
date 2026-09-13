@@ -23,22 +23,44 @@
 
     <section id="train" class="panel active">
       <h2>Mode entraînement</h2>
-      <p>Joue un son, écoute la réponse de ton chat, puis indique ce qu’il a fait.</p>
+      <p>L’application choisit un son, prépare le micro, joue le stimulus puis <strong>enregistre automatiquement la réponse de ton chat dès que le son se termine</strong>.</p>
+
       <div class="card">
-        <label>Nom du stimulus <input id="stimulusName" placeholder="Ex. appel court 01" /></label>
+        <h3>🔊 Bibliothèque de sons</h3>
+        <label>Source
+          <select id="librarySource">
+            <option value="auto">Automatique — bibliothèque publique + sons intégrés</option>
+            <option value="public">Bibliothèque publique</option>
+            <option value="builtin">Sons intégrés de secours</option>
+          </select>
+        </label>
+        <label>Stimulus
+          <select id="stimulusSelect"></select>
+        </label>
         <div class="row">
-          <input id="stimulusFile" type="file" accept="audio/*" />
-          <button id="playStimulus">▶ Jouer le son</button>
+          <button id="randomStimulus">🎲 Choisir automatiquement</button>
+          <button id="playStimulus" class="primary">▶ Jouer + écouter automatiquement</button>
         </div>
+        <div id="stimulusInfo" class="result">Chargement de la bibliothèque…</div>
+        <details>
+          <summary>Importer aussi un son personnel</summary>
+          <div class="row top-gap">
+            <input id="stimulusFile" type="file" accept="audio/*" />
+          </div>
+        </details>
       </div>
+
       <div class="card">
-        <h3>Réponse du chat</h3>
+        <h3>🎙️ Réponse du chat</h3>
+        <div id="trainingStatus" class="status" data-state="idle">Prêt. Appuie sur « Jouer + écouter automatiquement ».</div>
+        <p class="muted-note">Après le miaulement, Miaou écoute automatiquement pendant 6 secondes. Tu peux arrêter plus tôt si ton chat a déjà répondu.</p>
         <div class="row">
-          <button id="recordTrain">🎙️ Enregistrer</button>
-          <button id="stopTrain" disabled>⏹ Stop</button>
+          <button id="recordTrain">🎙️ Enregistrer manuellement</button>
+          <button id="stopTrain" disabled>⏹ Arrêter l’écoute</button>
         </div>
         <audio id="trainPlayback" controls></audio>
       </div>
+
       <div class="card">
         <label>Comportement observé
           <select id="behavior">
@@ -78,6 +100,7 @@
         <label>Ce que tu veux lui dire <input id="humanText" placeholder="Ex. viens" /></label>
         <button id="findSignal" class="primary">🔎 Trouver le meilleur signal</button>
         <div id="signalResult" class="result">Aucun signal sélectionné.</div>
+        <button id="playBestSignal" disabled>▶ Jouer le meilleur signal</button>
       </div>
     </section>
 
@@ -92,7 +115,7 @@
   </main>
 
   <footer>
-    <small>Prototype expérimental : ne prétend pas traduire une langue féline universelle.</small>
+    <small>Prototype expérimental : ne prétend pas traduire une langue féline universelle. Les sons publics sont lus depuis leur source et ne sont pas copiés dans le dépôt.</small>
   </footer>
 
   <script src="app.js"></script>

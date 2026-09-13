@@ -18,3 +18,14 @@ audio { width: 100%; margin-top: .75rem; }
 .result { margin-top: 1rem; padding: 1rem; border-radius: 10px; background: #f9fafb; border: 1px solid #e5e7eb; }
 .history-item { background: white; padding: .9rem; margin: .7rem 0; border-radius: 12px; }
 small.muted { color: #6b7280; }
+
+details { margin-top: 12px; }
+summary { cursor: pointer; font-weight: 600; }
+.top-gap { margin-top: 12px; }
+a { color: inherit; }
+
+.status { margin: .75rem 0; padding: .85rem 1rem; border-radius: 10px; background: #f9fafb; border: 1px solid #e5e7eb; font-weight: 650; }
+.status[data-state="recording"] { background: #fef2f2; border-color: #fecaca; }
+.status[data-state="done"] { background: #f0fdf4; border-color: #bbf7d0; }
+.status[data-state="error"] { background: #fff7ed; border-color: #fed7aa; }
+.muted-note { color: #6b7280; font-size: .95rem; }
