@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#111827" />
+  <title>Miaou — traducteur expérimental pour chat</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>🐾 Miaou</h1>
+    <p>Un laboratoire personnel pour apprendre les vocalisations de ton chat.</p>
+  </header>
+
+  <main>
+    <nav class="tabs" aria-label="Modes">
+      <button class="tab active" data-tab="train">🧠 Entraînement</button>
+      <button class="tab" data-tab="cat2text">🐱 Chat → Texte</button>
+      <button class="tab" data-tab="text2cat">💬 Texte → Chat</button>
+      <button class="tab" data-tab="history">📚 Historique</button>
+    </nav>
+
+    <section id="train" class="panel active">
+      <h2>Mode entraînement</h2>
+      <p>Joue un son, écoute la réponse de ton chat, puis indique ce qu’il a fait.</p>
+      <div class="card">
+        <label>Nom du stimulus <input id="stimulusName" placeholder="Ex. appel court 01" /></label>
+        <div class="row">
+          <input id="stimulusFile" type="file" accept="audio/*" />
+          <button id="playStimulus">▶ Jouer le son</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Réponse du chat</h3>
+        <div class="row">
+          <button id="recordTrain">🎙️ Enregistrer</button>
+          <button id="stopTrain" disabled>⏹ Stop</button>
+        </div>
+        <audio id="trainPlayback" controls></audio>
+      </div>
+      <div class="card">
+        <label>Comportement observé
+          <select id="behavior">
+            <option value="approche">Il vient / s’approche</option>
+            <option value="nourriture">Va vers la nourriture</option>
+            <option value="jeu">Veut jouer</option>
+            <option value="attention">Cherche de l’attention</option>
+            <option value="eloigne">S’éloigne</option>
+            <option value="repond">Répond vocalement seulement</option>
+            <option value="aucune">Aucune réaction</option>
+            <option value="autre">Autre</option>
+          </select>
+        </label>
+        <label>Intention supposée <input id="intent" placeholder="Ex. viens, manger, jouer…" /></label>
+        <label>Notes <textarea id="notes" rows="3" placeholder="Contexte libre"></textarea></label>
+        <button id="saveTraining" class="primary">💾 Enregistrer l’essai</button>
+      </div>
+    </section>
+
+    <section id="cat2text" class="panel">
+      <h2>Chat → Texte</h2>
+      <p>Enregistre un miaulement spontané. Le MVP retrouve les intentions déjà rencontrées.</p>
+      <div class="card">
+        <div class="row">
+          <button id="recordTranslate">🎙️ Écouter</button>
+          <button id="stopTranslate" disabled>⏹ Stop</button>
+        </div>
+        <audio id="translatePlayback" controls></audio>
+        <div id="catTranslation" class="result">Aucune analyse pour l’instant.</div>
+      </div>
+    </section>
+
+    <section id="text2cat" class="panel">
+      <h2>Texte → Chat</h2>
+      <p>Écris une intention. L’application choisit le stimulus qui a le mieux fonctionné dans tes essais.</p>
+      <div class="card">
+        <label>Ce que tu veux lui dire <input id="humanText" placeholder="Ex. viens" /></label>
+        <button id="findSignal" class="primary">🔎 Trouver le meilleur signal</button>
+        <div id="signalResult" class="result">Aucun signal sélectionné.</div>
+      </div>
+    </section>
+
+    <section id="history" class="panel">
+      <h2>Historique</h2>
+      <div class="row">
+        <button id="exportData">⬇ Exporter JSON</button>
+        <button id="clearData" class="danger">🗑 Effacer les données locales</button>
+      </div>
+      <div id="historyList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Prototype expérimental : ne prétend pas traduire une langue féline universelle.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
